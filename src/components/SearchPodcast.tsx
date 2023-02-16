@@ -1,30 +1,31 @@
-import { useEffect, useState } from "react";
 import { Button, Input } from "react-daisyui";
-import { BsSearch } from "react-icons/bs";
-import { BsInfoCircle } from "react-icons/bs";
-import isURL from "validator/lib/isURL";
+import { BsSearch, BsInfoCircle } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
 import isEmpty from "validator/lib/isEmpty";
 
+import {
+  searchUrlChangeAction,
+  fetchPodcastAction,
+} from "../redux/actions/homePageActionCreators";
+import { homePageState } from "../redux/reducers/homePageReducer";
+
 function SearchPodcast() {
-  const [searchUrl, setSearchUrl] = useState("");
-  const [isButtonDisabled, setIsButtonDisabled] = useState(true);
-  const [validationMessage, setValidationMessage] = useState("");
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (isEmpty(searchUrl)) {
-      setValidationMessage("Empty URL");
-      setIsButtonDisabled(true);
-    } else if (isURL(searchUrl, { require_protocol: true })) {
-      setValidationMessage("");
-      setIsButtonDisabled(false);
-    } else {
-      setValidationMessage("Invalid URL");
-      setIsButtonDisabled(true);
-    }
-  }, [searchUrl]);
+  const {
+    searchUrl,
+    isSearchButtonActive,
+    validationMessage,
+    extractedIdFromInput,
+  } = useSelector((state: homePageState) => state);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchUrl(e.target.value);
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch(searchUrlChangeAction(e.target.value));
+  };
+
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    dispatch(fetchPodcastAction(extractedIdFromInput) as any);
   };
 
   return (
@@ -35,19 +36,24 @@ function SearchPodcast() {
           <p>{validationMessage}</p>
         </div>
       )}
-      <form action="" className="flex flex-col w-full md:flex-row">
+      <form
+        action=""
+        onSubmit={handleFormSubmit}
+        className="flex flex-col w-full md:flex-row"
+      >
         <Input
           className="text-center focus:text-gray-500 focus:outline-none md:flex-1 md:rounded-r-none"
           placeholder="Enter Podcast URL"
           size="lg"
-          onChange={handleChange}
+          value={searchUrl}
+          onChange={handleUrlChange}
         />
         <Button
           className="mt-4 md:mt-0 md:rounded-l-none disabled:text-gray-400"
           type="submit"
           size="lg"
           startIcon={<BsSearch size="1rem" />}
-          disabled={isButtonDisabled}
+          disabled={!isSearchButtonActive}
         >
           Search
         </Button>
