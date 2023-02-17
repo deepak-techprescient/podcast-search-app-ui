@@ -10,18 +10,40 @@ import isEmpty from "validator/lib/isEmpty";
 
 import { AnyAction } from "redux";
 
+export interface Podcast {
+  name: string,
+  author:string,
+  genres: string[],
+  image: string,
+  totalEpisodes: number,
+  releaseDate: string,
+  issRssAvailable: boolean,
+  summary: string,
+  lastEpisodeReleaseDate: string,
+}
+
 export interface homePageState {
-  podcast: object,
-  loading: boolean,
-  searchUrl: string,
-  extractedIdFromInput: string,
-  isSearchButtonActive: boolean,
-  validationMessage: string,
-  error: string,
+  podcast: any; // Throws an error if changed to type Podcast
+  loading: boolean;
+  searchUrl: string;
+  extractedIdFromInput: string;
+  isSearchButtonActive: boolean;
+  validationMessage: string;
+  error: string;
 };
 
 const initialState: homePageState = {
-  podcast: {},
+  podcast: {
+    name: "",
+    author: "",
+    genres: [],
+    image: "",
+    totalEpisodes: null,
+    releaseDate: "",
+    issRssAvailable: null,
+    summary: "",
+    lastEpisodeReleaseDate: "",
+  },
   loading: false,
   searchUrl: "",
   extractedIdFromInput: "",

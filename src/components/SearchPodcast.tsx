@@ -42,7 +42,7 @@ function SearchPodcast() {
         className="flex flex-col w-full md:flex-row"
       >
         <Input
-          className="text-center focus:text-gray-500 focus:outline-none md:flex-1 md:rounded-r-none"
+          className="text-center text-gray-500 focus:outline-none md:flex-1 md:rounded-r-none"
           placeholder="Enter Podcast URL"
           size="lg"
           value={searchUrl}
