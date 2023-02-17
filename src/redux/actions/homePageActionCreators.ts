@@ -40,7 +40,6 @@ export const fetchPodcastAction = (id: string, source: string = "apple") => {
     try {
       const queryParams = { source, id };
       const response = await fetch(lookupEndpoint + "/podcast?" + new URLSearchParams(queryParams));
-      console.log(response.url);
       // manually handle erorr codes here or use axios
       const data = await response.json();
       dispatch(searchPodcastSuccessAction(data));
