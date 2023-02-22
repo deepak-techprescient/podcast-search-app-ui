@@ -29,7 +29,7 @@ function SearchPodcast() {
   };
 
   return (
-    <div className="flex flex-col items-center p-12">
+    <div className="flex flex-col items-center p-12 flex-1">
       {!isEmpty(validationMessage) && (
         <div className="flex justify-start items-center w-full gap-2 m-2 text-red-500 text-lg">
           <BsInfoCircle size="1.1rem" />
