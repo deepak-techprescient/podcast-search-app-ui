@@ -1,7 +1,10 @@
-import _ from "lodash";
+import _, { isEmpty } from "lodash";
+import React from "react";
 import ContentLoader from "react-content-loader";
-import { Badge, Hero } from "react-daisyui";
-import { useSelector } from "react-redux";
+import { BiErrorAlt } from "react-icons/bi";
+import { Badge, Button, Hero, Link } from "react-daisyui";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleShowMoreInfoAction } from "../redux/actions/homePageActionCreators";
 import { homePageState, Podcast } from "../redux/reducers/homePageReducer";
 
 interface PodcastInfoProps {
@@ -9,7 +12,14 @@ interface PodcastInfoProps {
 }
 
 function PodcastInfo({ podcast }: PodcastInfoProps) {
-  const { loading } = useSelector((state: homePageState) => state);
+  const dispatch = useDispatch();
+  const { loading, showMoreInfo, showMoreInfoButtonText, error } = useSelector(
+    (state: homePageState) => state
+  );
+
+  const toggleMoreInfo = (e: React.MouseEvent<HTMLButtonElement>) => {
+    dispatch(toggleShowMoreInfoAction());
+  };
 
   const smallScreenContentLoader = () => (
     <ContentLoader
@@ -69,48 +79,113 @@ function PodcastInfo({ podcast }: PodcastInfoProps) {
   };
 
   return (
-    <div>
+    <div className="grow">
       {loading ? (
         <>
           <div className="md:hidden">{smallScreenContentLoader()}</div>
           <div className="hidden md:block">{mediumScreenContentLoader()}</div>
         </>
-      ) : _.values(podcast).some((value) => !_.isEmpty(value)) ? (
-        <Hero className="pb-16">
-          <Hero.Content className="w-full md:mt-10 md:px-14">
-            <div className="flex flex-col items-center md:flex-row md:items-start">
-              {/* Image */}
-              <div className="flex items-center justify-center md:flex-1 md:justify-end md:pr-10">
-                <img
-                  src={podcast.image}
-                  alt=""
-                  className="w-3/6 md:h-80 md:w-auto rounded-2xl"
-                />
-              </div>
-              {/* Info */}
-              <div className="flex flex-col items-center px-4 md:justify-start md:items-start md:px-0 md:flex-1">
-                {/* Title and author */}
-                <div className="md:pl-0.5">
-                  <h1 className="text-4xl text-center font-extrabold text-gray-600 pt-10 md:pt-0 md:text-left md:text-5xl">
-                    {podcast.name}
-                  </h1>
-                  <h3 className="font-light text-lg text-center mt-8 md:mt-5 md:text-left">
-                    {podcast.author}
-                  </h3>
-                </div>
-                {/* Genres */}
-                <div className="flex flex-wrap gap-2 pt-10 justify-center md:pt-6">
-                  {podcast.genres &&
-                    podcast.genres.map((item: string, i: number) => (
-                      <Badge key={i} className="p-3">
-                        {item}
-                      </Badge>
-                    ))}
-                </div>
-              </div>
+      ) : isEmpty(error) &&
+        _.values(podcast).some((value) => !_.isEmpty(value)) ? (
+        <Hero>
+          <Hero.Content className="flex flex-col">
+            {/* Image */}
+            <div className="md:mt-10">
+              <img
+                src={podcast.image}
+                alt=""
+                className="rounded-3xl h-64 md:h-80 lg:h-96"
+              />
             </div>
+
+            {/* Title */}
+            <h1 className="text-4xl text-center font-extrabold text-gray-600 px-6 mt-10 md:text-5xl md:px-12 lg:text-7xl">
+              {podcast.name}
+            </h1>
+
+            {/* By */}
+            <p className="text-center my-4 font-thin italic">By</p>
+
+            {/* Author */}
+            <h3 className="text-center font-light text-2xl">
+              {podcast.author}
+            </h3>
+
+            {/* Podcast release date */}
+            {showMoreInfo && (
+              <div className="flex flex-col items-center mt-10">
+                <p className="font-thin font-mono text-gray-500">
+                  {podcast.startDate}
+                </p>
+                <p className="font-extralight text-sm text-gray-400 italic mt-2">
+                  (Official Start Date)
+                </p>
+              </div>
+            )}
+
+            {/* Genres */}
+            <div className="flex flex-wrap gap-2 px-5 justify-center mt-12">
+              {podcast.genres &&
+                podcast.genres.map((item: string, i: number) => (
+                  <Badge key={i} className="p-3">
+                    {item}
+                  </Badge>
+                ))}
+            </div>
+
+            {showMoreInfo && podcast.isRssAvailable && (
+              <>
+                {/* Summary */}
+                {!isEmpty(podcast) && (
+                  <p
+                    className="text-lg text-justify text-gray-500 font-thin mt-12 px-8 leading-10 lg:px-20"
+                    style={{ textAlignLast: "center" }}
+                  >
+                    {podcast.summary}
+                  </p>
+                )}
+
+                {/* Total episodes */}
+                <div>
+                  <h3 className="font-extrabold text-8xl mt-16 text-center">
+                    {podcast.totalEpisodes}
+                  </h3>
+                  <p className="text-center text-gray-400 font-thin text-2xl mt-3">
+                    Episodes
+                  </p>
+                </div>
+
+                {/* Last episode release date */}
+                <div className="mt-14 mb-10">
+                  <p className="font-extralight text-2xl text-gray-400 text-center">
+                    Latest Episode Release Date
+                  </p>
+                  <p className="font-extrabold text-lg text-gray-400 text-center italic mt-3">
+                    {podcast.lastEpisodeReleaseDate}
+                  </p>
+                </div>
+              </>
+            )}
+
+            {/* More info button */}
+            <Button size="lg" onClick={toggleMoreInfo} className="mt-12 mb-16">
+              {showMoreInfoButtonText}
+            </Button>
           </Hero.Content>
         </Hero>
+      ) : !isEmpty(error) ? (
+        <>
+          {/* Error page */}
+          <div className="flex text-rose-400 flex-col items-center justify-start h-[50vh] pt-20 gap-5 bg-rose-100 rounded-3xl w-[94%] m-auto mb-6">
+            <BiErrorAlt className="text-9xl" />
+            <h1 className="font-extrabold text-3xl md:text-5xl">{error}</h1>
+            <p>
+              Please try again or visit our{" "}
+              <Link className="underline underline-offset-2">FAQ's</Link> page
+              for more help
+            </p>
+          </div>
+        </>
       ) : (
         <></>
       )}
