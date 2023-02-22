@@ -79,7 +79,7 @@ function PodcastInfo({ podcast }: PodcastInfoProps) {
   };
 
   return (
-    <div className="grow">
+    <div className="h-full">
       {loading ? (
         <>
           <div className="md:hidden">{smallScreenContentLoader()}</div>
@@ -104,7 +104,7 @@ function PodcastInfo({ podcast }: PodcastInfoProps) {
             </h1>
 
             {/* By */}
-            <p className="text-center my-4 font-thin italic">By</p>
+            <p className="text-center my-4 font-light italic">By</p>
 
             {/* Author */}
             <h3 className="text-center font-light text-2xl">
@@ -114,10 +114,10 @@ function PodcastInfo({ podcast }: PodcastInfoProps) {
             {/* Podcast release date */}
             {showMoreInfo && (
               <div className="flex flex-col items-center mt-10">
-                <p className="font-thin font-mono text-gray-500">
+                <p className="font-light font-mono text-gray-500">
                   {podcast.startDate}
                 </p>
-                <p className="font-extralight text-sm text-gray-400 italic mt-2">
+                <p className="font-light text-sm text-gray-500 italic mt-2">
                   (Official Start Date)
                 </p>
               </div>
@@ -138,7 +138,7 @@ function PodcastInfo({ podcast }: PodcastInfoProps) {
                 {/* Summary */}
                 {!isEmpty(podcast) && (
                   <p
-                    className="text-lg text-justify text-gray-500 font-thin mt-12 px-8 leading-10 lg:px-20"
+                    className="text-lg text-justify text-gray-500 font-light mt-12 px-8 leading-10 lg:px-20"
                     style={{ textAlignLast: "center" }}
                   >
                     {podcast.summary}
@@ -150,7 +150,7 @@ function PodcastInfo({ podcast }: PodcastInfoProps) {
                   <h3 className="font-extrabold text-8xl mt-16 text-center">
                     {podcast.totalEpisodes}
                   </h3>
-                  <p className="text-center text-gray-400 font-thin text-2xl mt-3">
+                  <p className="text-center text-gray-400 font-light text-2xl mt-3">
                     Episodes
                   </p>
                 </div>
@@ -176,10 +176,12 @@ function PodcastInfo({ podcast }: PodcastInfoProps) {
       ) : !isEmpty(error) ? (
         <>
           {/* Error page */}
-          <div className="flex text-rose-400 flex-col items-center justify-start h-[50vh] pt-20 gap-5 bg-rose-100 rounded-3xl w-[94%] m-auto mb-6">
-            <BiErrorAlt className="text-9xl" />
-            <h1 className="font-extrabold text-3xl md:text-5xl">{error}</h1>
-            <p>
+          <div className="flex text-rose-400 bg-rose-100 flex-col w-full h-full items-center justify-start gap-5 md:justify-center">
+            <BiErrorAlt className="text-9xl mt-10" />
+            <h1 className="font-extrabold text-center text-4xl px-10 md:text-5xl">
+              {error}
+            </h1>
+            <p className="px-10 text-center mb-20">
               Please try again or visit our{" "}
               <Link className="underline underline-offset-2">FAQ's</Link> page
               for more help
