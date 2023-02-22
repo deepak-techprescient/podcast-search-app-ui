@@ -11,8 +11,11 @@ function Header() {
             <img className="h-10 md:h-12" src={Logo} alt="" />
           </a>
           <a href="/">
-            <h2 className="text-primary-content text-2xl mb-2 font-bold p-1">
-              Podcast Search
+            <h2 className="text-primary-content text-2xl mb-1 font-light italic p-1">
+              <span className="text-[#50e6ff] font-medium not-italic">
+                Podcast
+              </span>{" "}
+              Search
             </h2>
           </a>
         </div>
