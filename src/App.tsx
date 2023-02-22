@@ -9,7 +9,7 @@ function App() {
     <BrowserRouter>
       <div className="flex flex-col justify-between h-screen">
         <Header />
-        <main className="grow">
+        <main className="flex flex-col grow">
           <Routes>
             <Route path="/" element={<Home />} />
           </Routes>
